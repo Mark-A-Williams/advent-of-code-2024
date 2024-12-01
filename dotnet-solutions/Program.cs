@@ -1,2 +1,9 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using AoC2024;
+
+var start = DateTime.Now;
+
+var result = Day1.Part2();
+
+var end = DateTime.Now;
+
+Console.WriteLine($"Result: {result}. Duration: {(end - start).TotalMilliseconds}ms.");
