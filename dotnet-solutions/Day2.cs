@@ -20,42 +20,37 @@ public class Day2
 
     private static bool IsReportSafe(int[] report, bool allowSingleUnsafeLevel = false)
     {
-        var anyHaveIncreased = false;
-        var anyHaveDecreased = false;
-        var hasHadUnsafeLevel = false;
+        var safeIncreaseCount = 0;
+        var safeDecreaseCount = 0;
+        var unsafeChangeCount = 0;
 
-        // Think this doesn't work because if in fact it was the first level that was unsafe, we determine the wrong direction for the whole thing
         for (int i = 0; i < report.Length - 1; i++)
         {
             var diff = report[i + 1] - report[i];
 
             if (diff > 3 || diff < -3 || diff == 0)
             {
-                if (!allowSingleUnsafeLevel || hasHadUnsafeLevel) return false;
-                hasHadUnsafeLevel = true;
+                unsafeChangeCount++;
             }
             else if (diff > 0)
             {
-                if (anyHaveDecreased)
-                {
-                    if (!allowSingleUnsafeLevel || hasHadUnsafeLevel) return false;
-                    hasHadUnsafeLevel = true;
-                }
-
-                anyHaveIncreased = true;
+                safeIncreaseCount++;
             }
             else if (diff < 0)
             {
-                if (anyHaveIncreased)
-                {
-                    if (!allowSingleUnsafeLevel || hasHadUnsafeLevel) return false;
-                    hasHadUnsafeLevel = true;
-                }
-
-                anyHaveDecreased = true;
+                safeDecreaseCount++;
             }
         }
 
-        return true;
+        var totalChanges = safeDecreaseCount + safeIncreaseCount + unsafeChangeCount;
+
+        if (allowSingleUnsafeLevel)
+        {
+            return safeDecreaseCount >= totalChanges - 1 || safeIncreaseCount >= totalChanges - 1;
+        }
+        else
+        {
+            return safeDecreaseCount == totalChanges || safeIncreaseCount == totalChanges;
+        }
     }
 }
