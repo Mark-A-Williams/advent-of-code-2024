@@ -15,10 +15,20 @@ public class Day2
             .Count(line =>
             {
                 var report = line.Split(" ").Select(int.Parse).ToArray();
-                return IsReportSafe(report, allowSingleUnsafeLevel: true);
+                return IsReportSafe(report) || IsReportSafeIfLevelSkipped(report);
             });
 
-    private static bool IsReportSafe(int[] report, bool allowSingleUnsafeLevel = false)
+    private static bool IsReportSafeIfLevelSkipped(int[] report)
+    {
+        for (int i = 0; i < report.Length; i++)
+        {
+            if (IsReportSafe(report.Where((o, index) => index != i).ToArray())) return true;
+        }
+
+        return false;
+    }
+
+    private static bool IsReportSafe(int[] report)
     {
         var safeIncreaseCount = 0;
         var safeDecreaseCount = 0;
@@ -43,14 +53,6 @@ public class Day2
         }
 
         var totalChanges = safeDecreaseCount + safeIncreaseCount + unsafeChangeCount;
-
-        if (allowSingleUnsafeLevel)
-        {
-            return safeDecreaseCount >= totalChanges - 1 || safeIncreaseCount >= totalChanges - 1;
-        }
-        else
-        {
-            return safeDecreaseCount == totalChanges || safeIncreaseCount == totalChanges;
-        }
+        return safeDecreaseCount == totalChanges || safeIncreaseCount == totalChanges;
     }
 }
