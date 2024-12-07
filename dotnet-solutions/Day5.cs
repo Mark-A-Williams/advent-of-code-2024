@@ -10,20 +10,10 @@ public class Day5
 
         foreach (var pageList in input.RequiredPageLists)
         {
-            var obeysAllRules = true;
-            foreach (var rule in input.OrderingRules)
+            if (PageListIsInOrder(pageList, input.OrderingRules))
             {
-                if (!pageList.Contains(rule.First) || !pageList.Contains(rule.Second)) continue;
-
-                var isObeyed = pageList.IndexOf(rule.First) < pageList.IndexOf(rule.Second);
-                if (!isObeyed)
-                {
-                    obeysAllRules = false;
-                    break;
-                }
+                correctlyOrderedMiddlePageNumberCount += pageList[(pageList.Count - 1) / 2];
             }
-
-            if (obeysAllRules) correctlyOrderedMiddlePageNumberCount += pageList[(pageList.Count - 1) / 2];
         }
 
         return correctlyOrderedMiddlePageNumberCount;
@@ -32,6 +22,22 @@ public class Day5
     public static int Part2()
     {
         return 0;
+    }
+
+    private static bool PageListIsInOrder(List<int> pageList, List<(int First, int Second)> orderingRules)
+    {
+        foreach (var rule in orderingRules)
+        {
+            if (!pageList.Contains(rule.First) || !pageList.Contains(rule.Second)) continue;
+
+            var isObeyed = pageList.IndexOf(rule.First) < pageList.IndexOf(rule.Second);
+            if (!isObeyed)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private static (List<(int First, int Second)> OrderingRules, List<List<int>> RequiredPageLists) ParseInput()
