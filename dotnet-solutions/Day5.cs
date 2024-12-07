@@ -13,6 +13,8 @@ public class Day5
             var obeysAllRules = true;
             foreach (var rule in input.OrderingRules)
             {
+                if (!pageList.Contains(rule.First) || !pageList.Contains(rule.Second)) continue;
+
                 var isObeyed = pageList.IndexOf(rule.First) < pageList.IndexOf(rule.Second);
                 if (!isObeyed)
                 {
